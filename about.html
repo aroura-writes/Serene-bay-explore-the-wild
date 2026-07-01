@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About – Serene Bay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;900&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="content-loader.js"></script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div><span data-site-title>SERENE BAY</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+      <a href="flower-blog.html">Flower Blog</a>
+      <a href="nature-literacy.html">Nature Literacy</a><a href="about.html" class="active">About</a>
+    </div>
+    <a href="gallery.html" class="btn-liquid nav-cta">Explore Wild</a>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+    <a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+  </div>
+</nav>
+
+<!-- Origin -->
+<section style="padding:7rem 1.5rem 4rem;position:relative;overflow:hidden;">
+  <div class="orb" style="width:18rem;height:18rem;background:#D8F3DC;top:3rem;right:0;"></div>
+  <div class="about-split">
+    <div class="about-text">
+      <p class="eyebrow">Our Origin</p>
+      <h1 id="aboutHeadline" style="font-size:clamp(2.5rem,5vw,4.5rem);margin-bottom:1.5rem;"></h1>
+      <p class="about-lead" id="aboutLead"></p>
+      <p class="about-body" id="aboutBody"></p>
+      <a href="gallery.html" class="btn-liquid">ENTER THE BIOME →</a>
+    </div>
+    <div class="about-img-wrap">
+      <img id="aboutHeroImg" src="" alt="Nature">
+      <div class="about-badge">
+        <div class="about-badge-icon">🌿</div>
+        <div><p>Since</p><p>2024</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="section values-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow">Our Philosophy</p>
+      <h2 class="section-title">WHAT WE STAND FOR</h2>
+    </div>
+    <div class="values-grid" id="valuesGrid"></div>
+  </div>
+</section>
+
+<!-- Team -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow">The Collective</p>
+      <h2 class="section-title">VOICES OF THE WILD</h2>
+    </div>
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="stats-grid" id="statsGrid"></div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-orb"></div>
+  <div class="container footer-inner">
+    <div class="footer-brand"><div class="nav-logo"><div class="logo-icon">🌿</div><span style="color:#fff" data-site-title>SERENE BAY</span></div><p>A sanctuary for those who find solace in forests, oceans, and the untamed wild.</p></div>
+    <div class="footer-links"><p class="footer-heading">Pages</p><a href="index.html">Home</a><a href="gallery.html">Gallery</a><a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a></div>
+    <div class="footer-quote"><p class="footer-heading">Today's Breath</p><blockquote data-footer-quote>"In every walk with nature, one receives far more than he seeks."<br><cite>— John Muir</cite></blockquote></div>
+  </div>
+  <div class="footer-bottom container"><p>© 2026 SERENE BAY. ALL RIGHTS RESERVED.</p><p>CRAFTED WITH CARE FOR THE NATURAL WORLD</p></div>
+</footer>
+
+<script>
+  async function loadAbout() {
+    await initShell();
+    const items = await fetchMarkdownItems('/content/about.md');
+
+    const origin = items.find(i => i.section === 'origin');
+    if (origin) {
+      document.getElementById('aboutHeadline').innerHTML = `${origin.headline1}<br>${origin.headline2}<br>${origin.headline3}`;
+      // Split content into lead (first paragraph) and body (rest)
+      const paragraphs = origin._content.split('\n\n');
+      document.getElementById('aboutLead').textContent = paragraphs[0] || '';
+      document.getElementById('aboutBody').textContent = paragraphs.slice(1).join('\n\n');
+      document.getElementById('aboutHeroImg').src = origin.hero_image;
+    }
+
+    const values = items.filter(i => i.section === 'value');
+    document.getElementById('valuesGrid').innerHTML = values.map(v => `
+      <div class="value-card">
+        <div class="value-icon">${v.icon}</div>
+        <h3>${v.title}</h3>
+        <p>${renderMd(v._content)}</p>
+      </div>
+    `).join('');
+
+    const team = items.filter(i => i.section === 'team');
+    document.getElementById('teamGrid').innerHTML = team.map(m => `
+      <div class="team-card">
+        <img src="${m.photo}" alt="${esc(m.name)}">
+        <div class="team-card-body">
+          <h3>${m.name}</h3>
+          <p>${m.role}</p>
+        </div>
+      </div>
+    `).join('');
+
+    const stats = items.filter(i => i.section === 'stat');
+    document.getElementById('statsGrid').innerHTML = stats.map(s => `
+      <div>
+        <div class="stat-value">${s.value}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>
+    `).join('');
+  }
+
+  initNavbar();
+  loadAbout();
+</script>
+</body>
+</html>

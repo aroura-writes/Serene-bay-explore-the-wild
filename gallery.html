@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery – Serene Bay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;900&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="content-loader.js"></script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div><span data-site-title>SERENE BAY</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="gallery.html" class="active">Gallery</a>
+      <a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+    </div>
+    <a href="gallery.html" class="btn-liquid nav-cta">Explore Wild</a>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+    <a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="orb" style="width:14rem;height:14rem;background:#D8F3DC;top:4rem;right:3rem;"></div>
+  <p class="eyebrow">The Lens</p>
+  <h1 class="page-title">NATURE'S GALLERY</h1>
+  <p style="max-width:480px;margin:0 auto;">Curated landscapes from the world's most breathtaking biomes. Hover to reveal. Click to immerse.</p>
+</section>
+
+<div class="filter-pills" id="filterPills">
+  <button class="filter-pill active" onclick="filterGallery('All',this)">All</button>
+</div>
+
+<div class="masonry" id="gallery"></div>
+
+<div class="modal" id="modal" onclick="closeModal()">
+  <div class="modal-inner" onclick="event.stopPropagation()">
+    <div class="modal-img"><img id="modalImg" src="" alt=""></div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <p class="modal-cat" id="modalCat"></p>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-desc" id="modalDesc"></p>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-orb"></div>
+  <div class="container footer-inner">
+    <div class="footer-brand"><div class="nav-logo"><div class="logo-icon">🌿</div><span style="color:#fff" data-site-title>SERENE BAY</span></div><p>A sanctuary for those who find solace in forests, oceans, and the untamed wild.</p></div>
+    <div class="footer-links"><p class="footer-heading">Pages</p><a href="index.html">Home</a><a href="gallery.html">Gallery</a><a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a></div>
+    <div class="footer-quote"><p class="footer-heading">Today's Breath</p><blockquote data-footer-quote>"Look deep into nature, and then you will understand everything better."<br><cite>— Albert Einstein</cite></blockquote></div>
+  </div>
+  <div class="footer-bottom container"><p>© 2026 SERENE BAY. ALL RIGHTS RESERVED.</p><p>CRAFTED WITH CARE FOR THE NATURAL WORLD</p></div>
+</footer>
+
+<script>
+  let allItems = [];
+
+  async function loadGallery() {
+    await initShell();
+    allItems = await fetchPosts('gallery');
+    allItems.sort((a, b) => (parseInt(a.order) || 99) - (parseInt(b.order) || 99));
+
+    const cats = [...new Set(allItems.map(i => i.category))];
+    const pills = document.getElementById('filterPills');
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-pill';
+      btn.textContent = cat;
+      btn.onclick = () => filterGallery(cat, btn);
+      pills.appendChild(btn);
+    });
+
+    renderItems(allItems);
+  }
+
+  let currentItems = [];
+
+  function renderItems(items) {
+    currentItems = items;
+    document.getElementById('gallery').innerHTML = items.map((item, idx) => `
+      <div class="masonry-item" onclick="openModal(${idx})">
+        <img src="${item.image.replace('w=800','w=600')}" alt="${item.title}">
+        <div class="masonry-overlay"></div>
+        <div class="masonry-meta">
+          <p class="cat">${item.category}</p>
+          <p class="title">${item.title}</p>
+          <p class="loc">${item.location}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterGallery(cat, btn) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    renderItems(cat === 'All' ? allItems : allItems.filter(i => i.category === cat));
+  }
+
+  function openModal(idx) {
+    const item = currentItems[idx];
+    document.getElementById('modalTitle').textContent = item.title;
+    document.getElementById('modalCat').textContent = item.category + ' · ' + item.location;
+    document.getElementById('modalDesc').textContent = item._content;
+    document.getElementById('modalImg').src = item.image;
+    document.getElementById('modal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+  initNavbar();
+  loadGallery();
+</script>
+</body>
+</html>

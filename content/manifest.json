@@ -1,0 +1,27 @@
+{
+  "gallery": [
+    "01-ancient-redwood-mist.md",
+    "02-turquoise-horizon.md",
+    "03-dune-silence.md",
+    "04-fern-fronds-at-dawn.md",
+    "05-veil-falls.md",
+    "06-alpine-solitude.md",
+    "07-drone-wave-study.md",
+    "08-autumn-cathedral.md",
+    "09-salt-flat-infinity.md",
+    "10-mossy-cascade.md",
+    "11-summit-glow.md",
+    "12-sea-glass-shore.md"
+  ],
+  "flowers": [
+    "cherry-blossom.md",
+    "lotus.md",
+    "bird-of-paradise.md"
+  ],
+  "literacy": [
+    "01-forest-ecosystems.md",
+    "02-ocean-biomes.md",
+    "03-desert-ecology.md",
+    "04-conservation-science.md"
+  ]
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Serene Bay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;900&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="content-loader.js"></script>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div><span data-site-title>SERENE BAY</span></a>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="flower-blog.html">Flower Blog</a>
+        <a href="nature-literacy.html">Nature Literacy</a>
+        <a href="about.html">About</a>
+      </div>
+      <a href="gallery.html" class="btn-liquid nav-cta">Explore Wild</a>
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+      <a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"><img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=1800&q=90" alt="Forest"></div>
+    <div class="hero-overlay"></div>
+    <div class="orb" style="width:20rem;height:20rem;background:#D8F3DC;top:10%;left:5%;"></div>
+    <div class="orb" style="width:16rem;height:16rem;background:#b7e4c7;bottom:10%;right:5%;animation-delay:-4s;"></div>
+    <div class="hero-content">
+      <p class="eyebrow">◆ <span data-tagline>Where Nature Speaks</span> ◆</p>
+      <div class="hero-h1"><span class="h1-serene">SERENE</span><span class="h1-bay">BAY</span></div>
+      <div class="hero-glass-card glass">
+        <p data-hero-subtitle>A sanctuary for forest lovers, ocean dreamers &amp; desert wanderers</p>
+        <a href="gallery.html" class="btn-liquid btn-full">EXPLORE THE WILD →</a>
+      </div>
+      <div class="scroll-hint breath"><p>Scroll to Breathe</p><span>↓</span></div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">The Digital Biome</p>
+        <h2 class="section-title">NATURE'S DIMENSIONS</h2>
+      </div>
+      <div class="grid-4" id="featuresGrid"></div>
+    </div>
+  </section>
+
+  <!-- Image Strip -->
+  <section class="strip-section">
+    <div class="container">
+      <div class="image-strip">
+        <div class="strip-img"><img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80" alt="Forest"></div>
+        <div class="strip-img"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80" alt="Ocean"></div>
+        <div class="strip-img"><img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80" alt="Desert"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-bg"></div>
+    <div class="container text-center">
+      <p class="eyebrow">Discover More</p>
+      <h2 class="section-title">THE WILD AWAITS YOUR PRESENCE</h2>
+      <p class="cta-desc" id="ctaDesc"></p>
+      <div class="cta-buttons">
+        <a href="gallery.html" class="btn-liquid">VIEW GALLERY →</a>
+        <a href="flower-blog.html" class="btn-outline">READ CHRONICLES</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-orb"></div>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo"><div class="logo-icon">🌿</div><span style="color:#fff" data-site-title>SERENE BAY</span></div>
+        <p>A sanctuary for those who find solace in forests, oceans, and the untamed wild.</p>
+      </div>
+      <div class="footer-links">
+        <p class="footer-heading">Pages</p>
+        <a href="index.html">Home</a><a href="gallery.html">Gallery</a><a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+      </div>
+      <div class="footer-quote">
+        <p class="footer-heading">Today's Breath</p>
+        <blockquote data-footer-quote>"In every walk with nature, one receives far more than he seeks."<br><cite>— John Muir</cite></blockquote>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>© 2026 SERENE BAY. ALL RIGHTS RESERVED.</p>
+      <p>CRAFTED WITH CARE FOR THE NATURAL WORLD</p>
+    </div>
+  </footer>
+
+  <script>
+    async function loadHome() {
+      await initShell();
+      const items = await fetchMarkdownItems('/content/home.md');
+      const features = items.filter(i => i.section === 'feature');
+      const cta = items.find(i => i.section === 'cta');
+
+      document.getElementById('featuresGrid').innerHTML = features.map(f => `
+        <div class="feature-card glass-card">
+          <div class="feature-icon">${f.icon}</div>
+          <h3>${f.title}</h3>
+          <p>${renderMd(f._content)}</p>
+        </div>
+      `).join('');
+
+      if (cta) document.getElementById('ctaDesc').textContent = cta.cta_desc;
+    }
+    initNavbar();
+    loadHome();
+  </script>
+</body>
+</html>

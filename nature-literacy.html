@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nature Literacy – Serene Bay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;900&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="content-loader.js"></script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div><span data-site-title>SERENE BAY</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+      <a href="flower-blog.html">Flower Blog</a>
+      <a href="nature-literacy.html" class="active">Nature Literacy</a><a href="about.html">About</a>
+    </div>
+    <a href="gallery.html" class="btn-liquid nav-cta">Explore Wild</a>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="gallery.html">Gallery</a>
+    <a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="orb" style="width:14rem;height:14rem;background:#D8F3DC;top:3rem;right:4rem;"></div>
+  <p class="eyebrow">The Knowledge Base</p>
+  <h1 class="page-title">NATURE LITERACY</h1>
+  <p style="max-width:520px;margin:0 auto;">Understanding nature is the first act of loving it. Expand your ecological intelligence, one biome at a time.</p>
+</section>
+
+<div class="accordion-list" id="accordionList"></div>
+
+<footer class="site-footer">
+  <div class="footer-orb"></div>
+  <div class="container footer-inner">
+    <div class="footer-brand"><div class="nav-logo"><div class="logo-icon">🌿</div><span style="color:#fff" data-site-title>SERENE BAY</span></div><p>A sanctuary for those who find solace in forests, oceans, and the untamed wild.</p></div>
+    <div class="footer-links"><p class="footer-heading">Pages</p><a href="index.html">Home</a><a href="gallery.html">Gallery</a><a href="flower-blog.html">Flower Blog</a><a href="nature-literacy.html">Nature Literacy</a><a href="about.html">About</a></div>
+    <div class="footer-quote"><p class="footer-heading">Today's Breath</p><blockquote data-footer-quote>"The earth does not belong to us, we belong to the earth."<br><cite>— Chief Seattle</cite></blockquote></div>
+  </div>
+  <div class="footer-bottom container"><p>© 2026 SERENE BAY. ALL RIGHTS RESERVED.</p><p>CRAFTED WITH CARE FOR THE NATURAL WORLD</p></div>
+</footer>
+
+<script>
+  async function loadLiteracy() {
+    await initShell();
+    const items = await fetchPosts('literacy');
+    items.sort((a, b) => (parseInt(a.order) || 99) - (parseInt(b.order) || 99));
+
+    document.getElementById('accordionList').innerHTML = items.map((item, i) => {
+      const id = 'acc' + i;
+      return `
+        <div class="accordion-item" id="${id}">
+          <button class="accordion-header" onclick="toggleAcc('${id}')">
+            <div class="acc-icon-wrap">
+              <div class="acc-icon" style="background:${item.color}18;border:1px solid ${item.color}40;">${item.icon}</div>
+              <div class="acc-title">
+                <h2>${item.title}</h2>
+                <p>${item.subtitle}</p>
+              </div>
+            </div>
+            <span class="acc-chevron" style="color:${item.color};">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <div class="acc-divider" style="background:linear-gradient(to right,${item.color},transparent);"></div>
+              <div class="md-content">${renderMd(item._content)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleAcc(id) {
+    const el = document.getElementById(id);
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.accordion-item').forEach(a => a.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+
+  initNavbar();
+  loadLiteracy();
+</script>
+</body>
+</html>
